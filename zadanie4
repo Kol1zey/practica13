@@ -1,0 +1,136 @@
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Channels;
+using System.Xml.Linq;
+namespace domashechkaMDK
+{
+    internal class Program
+    {
+        public abstract class Course
+        {
+            public string Title { get; set; }
+            public string Description { get; set; }
+            public string Author { get; set; }
+            public decimal Price { get; set; }
+
+            public Course(string title, string description, string author, decimal price)
+            {
+                Title = title;
+                Description = description;
+                Author = author;
+                Price = price;
+            }
+            public virtual void GetInfo()
+            {
+                Console.WriteLine($"Курс: {Title}\nОписание: {Description}\nАвтор: {Author}\nЦена: {Price}");
+            }
+            public abstract void Start();
+
+            public virtual decimal CalculatePrice()
+            {
+                return Price;
+            }
+            public abstract double GetProgress();
+        }
+        public class VideoCourse : Course
+        {
+            public int VideoCount { get; set; }
+            public double TotalDuration { get; set; } 
+            private int ViewedVideos { get; set; }
+
+            public VideoCourse(string title, string description, string author, decimal price, int videoCount, double totalDuration) : base(title, description, author, price)
+            {
+                VideoCount = videoCount;
+                TotalDuration = totalDuration;
+                ViewedVideos = 0;
+            }
+            public override void Start()
+            {
+                Console.WriteLine($"Начало просмотра видеокурса {Title}.");
+            }
+            public void ViewVideo()
+            {
+                if (ViewedVideos < VideoCount)
+                {
+                    ViewedVideos++;
+                    Console.WriteLine($"Просмотрено видео {ViewedVideos}/{VideoCount}");
+                }
+                else
+                {
+                    Console.WriteLine("Все видео просмотрены.");
+                }
+            }
+            public override double GetProgress()
+            {
+                return (double)ViewedVideos / VideoCount * 100;
+            }
+        }
+        public class TextCourse : Course
+        {
+            public int ChapterCount { get; set; }
+            public double TotalVolume { get; set; } 
+            private int ReadChapters { get; set; }
+
+            public TextCourse(string title, string description, string author, decimal price, int chapterCount, double totalVolume) : base(title, description, author, price)
+            {
+                ChapterCount = chapterCount;
+                TotalVolume = totalVolume;
+                ReadChapters = 0;
+            }
+            public override void Start()
+            {
+                Console.WriteLine($"Начато чтение текстового курса {Title}.");
+            }
+            public void ReadChapter()
+            {
+                if (ReadChapters < ChapterCount)
+                {
+                    ReadChapters++;
+                    Console.WriteLine($"Прочитано глав {ReadChapters}/{ChapterCount}");
+                }
+                else
+                {
+                    Console.WriteLine("Все главы прочитаны.");
+                }
+            }
+            public override double GetProgress()
+            {
+                return (double)ReadChapters / ChapterCount * 100;
+            }
+        }
+        public class InteractiveCourse : Course
+        {
+            public int ExerciseCount { get; set; }
+            public bool IsChecked { get; set; }
+
+            public InteractiveCourse(string title, string description, string author, decimal price, int exerciseCount) : base(title, description, author, price)
+            {
+                ExerciseCount = exerciseCount;
+                IsChecked = false;
+            }
+            public override void Start()
+            {
+                Console.WriteLine($"Начато выполнение интерактивного курса {Title}.");
+            }
+            public void CompleteExercise()
+            {
+                if (!IsChecked)
+                { 
+                    IsChecked = true;
+                    Console.WriteLine("Упражнение выполнено и проверено.");
+                }
+                else
+                {
+                    Console.WriteLine("Все упражнения уже выполнены и проверены.");
+                }
+            }
+            public override double GetProgress()
+            {
+                return IsChecked ? 100 : 0;
+            }
+        }
+        static void Main(string[] args)
+        {
+            
+        }
+    }
+}
