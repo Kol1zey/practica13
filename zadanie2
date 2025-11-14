@@ -1,0 +1,125 @@
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Channels;
+using System.Xml.Linq;
+namespace domashechkaMDK
+{
+    internal class Program
+    {
+        public abstract class BankAccount
+        {
+            public string AccountNumber { get; protected set; }
+            public decimal Balance { get; protected set; }
+            public string Owner { get; protected set; }
+            public BankAccount(string accountNumber, string owner, decimal initialBalance = 0)
+            {
+                AccountNumber = accountNumber;
+                Owner = owner;
+                Balance = initialBalance;
+            }
+            public virtual void Deposit(decimal amount)
+            {
+                if (amount > 0)
+                {
+                    Balance += amount;
+                    Console.WriteLine($"Пополнение: {amount}, новый баланс: {Balance}");
+                }
+                else
+                {
+                    Console.WriteLine("Некорректная сумма для пополнения.");
+                }
+            }
+            public virtual bool Withdraw(decimal amount)
+            {
+                if (amount > 0 && amount <= Balance)
+                {
+                    Balance -= amount;
+                    Console.WriteLine($"Снятие: {amount}, новый баланс: {Balance}");
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine("Недостаточно средств или некорректная сумма.");
+                    return false;
+                }
+            }
+            public decimal GetBalance()
+            {
+                return Balance;
+            }
+        }
+        public class CheckingAccount : BankAccount
+        {
+            public decimal OverdraftLimit { get; set; }
+
+            public CheckingAccount(string accountNumber, string owner, decimal initialBalance, decimal overdraftLimit) : base(accountNumber, owner, initialBalance)
+            {
+                OverdraftLimit = overdraftLimit;
+            }
+            public override bool Withdraw(decimal amount)
+            {
+                if (amount > 0 && amount <= Balance + OverdraftLimit)
+                {
+                    Balance -= amount;
+                    Console.WriteLine($"Снятие с овердрафтом: {amount}, баланс: {Balance}");
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine("Превышен лимит овердрафта.");
+                    return false;
+                }
+            }
+            public void UseOverdraft()
+            {
+                Console.WriteLine($"{Owner} использует овердрафт до лимита {OverdraftLimit}.");
+            }
+        }
+        public class SavingsAccount : BankAccount
+        {
+            public double InterestRate { get; set; }
+            public SavingsAccount(string accountNumber, string owner, decimal initialBalance, double interestRate) : base(accountNumber, owner, initialBalance)
+            {
+                InterestRate = interestRate;
+            }
+            public void AddInterest()
+            {
+                decimal interest = Balance * (decimal)InterestRate;
+                Deposit(interest);
+                Console.WriteLine($"Начислены проценты: {interest}");
+            }
+        }
+        public class CreditAccount : BankAccount
+        {
+            public decimal CreditLimit { get; set; }
+            public DateTime DueDate { get; set; }
+            public CreditAccount(string accountNumber, string owner, decimal initialBalance, decimal creditLimit, DateTime dueDate) : base(accountNumber, owner, initialBalance)
+            {
+                CreditLimit = creditLimit;
+                DueDate = dueDate;
+            }
+            public override bool Withdraw(decimal amount)
+            {
+                if (amount > 0 && Balance - amount >= -CreditLimit)
+                {
+                    Balance -= amount;
+                    Console.WriteLine($"Снятие с кредитного счета: {amount}, баланс: {Balance}");
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine("Превышен кредитный лимит.");
+                    return false;
+                }
+            }
+            public void Repay(decimal amount)
+            {
+                Deposit(amount);
+                Console.WriteLine($"Погашение кредита: {amount}");
+            }
+        }
+        static void Main(string[] args)
+        {
+            
+        }
+    }
+}
