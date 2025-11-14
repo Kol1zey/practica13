@@ -1,0 +1,67 @@
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Channels;
+using System.Xml.Linq;
+namespace domashechkaMDK
+{
+    internal class Program
+    {
+        class Employee
+        {
+            public string Name { get; set; }
+            public string Position { get; set; }
+            public int Salary { get; set; }
+            public string Date { get; set; }
+            public Employee(string name, string position, int salary, string date)
+            {
+                Name = name;
+                Position = position;
+                Salary = salary;
+                Date = date;
+            }
+            public virtual void ShowInfo()
+            {
+                Console.WriteLine($"Имя: {Name}, должность: {Position}, зарплата: {Salary}, дата приема: {Date}.");
+            }
+        }
+        class Manager : Employee
+        {
+            public int TeamSize { get; set; }
+            public Manager(string name, int salary, string date, int teamSize) : base(name, "Менеджер", salary, date)
+            {
+                TeamSize = teamSize;
+            }
+            public void Meeting()
+            {
+                Console.WriteLine($"{Name} проводит собрание команды размером {TeamSize} человек.");
+            }
+        }
+        class Developer : Employee
+        {
+            public string ProgrammLanguage { get; set; }
+            public Developer(string name, int salary, string date, string programmlanguage) : base (name, "Разработчик", salary, date)
+            {
+                ProgrammLanguage = programmlanguage;
+            }
+            public void WriteCode()
+            {
+                Console.WriteLine($"{Name} пишет код на языке {ProgrammLanguage}.");
+            }
+        }
+        class Director : Employee
+        {
+            public string Departament { get; set; }
+            public Director(string name, int salary, string date, string departament) : base (name, "Директор", salary, date)
+            {
+                Departament = departament;
+            }
+            public void ApproveBudget()
+            {
+                Console.WriteLine($"{Name} утвердли бюджет для отдела {Departament}");
+            }
+        }
+        static void Main(string[] args)
+        {
+            
+        }
+    }
+}
