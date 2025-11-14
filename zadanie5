@@ -1,0 +1,144 @@
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Channels;
+using System.Xml.Linq;
+namespace domashechkaMDK
+{
+    internal class Program
+    {
+        public abstract class Animal
+        {
+            protected string species;
+            protected int age;
+            protected string habitat; 
+            protected string diet;    
+
+            public string Name { get; set; }
+
+            public Animal(string species, int age, string habitat, string diet, string name)
+            {
+                this.species = species;
+                this.age = age;
+                this.habitat = habitat;
+                this.diet = diet;
+                this.Name = name;
+            }
+
+            public virtual void Eat()
+            {
+                Console.WriteLine($"{Name} ест {diet}.");
+            }
+
+            public void Sleep()
+            {
+                Console.WriteLine($"{Name} спит.");
+            }
+
+            public void Move()
+            {
+                Console.WriteLine($"{Name} движется.");
+            }
+
+            public virtual void MakeSound()
+            {
+                Console.WriteLine($"{Name} издает звук.");
+            }
+
+            public virtual void GetInfo()
+            {
+                Console.WriteLine($"Вид: {species}, Имя: {Name}, Возраст: {age} лет, Обитание: {habitat}");
+            }
+        }
+        public class Mammal : Animal
+        {
+            protected string furType;
+            protected int pregnancyDuration; 
+
+            public Mammal(string species, int age, string habitat, string diet, string name, string furType, int pregnancyDuration) : base(species, age, habitat, diet, name)
+            {
+                this.furType = furType;
+                this.pregnancyDuration = pregnancyDuration;
+            }
+
+            public void GiveBirth()
+            {
+                Console.WriteLine($"{Name} рожает малыша.");
+            }
+
+            public override void GetInfo()
+            {
+                base.GetInfo();
+                Console.WriteLine($"Тип меха: {furType}, Продолжительность беременности: {pregnancyDuration} дней");
+            }
+        }
+        public class Bird : Animal
+        {
+            protected double wingspan; 
+            protected string nestType;
+
+            public Bird(string species, int age, string habitat, string diet, string name, double wingspan, string nestType) : base(species, age, habitat, diet, name)
+            {
+                this.wingspan = wingspan;
+                this.nestType = nestType;
+            }
+
+            public void Fly()
+            {
+                Console.WriteLine($"{Name} летит с размахом крыльев {wingspan} метра(-ов).");
+            }
+
+            public override void GetInfo()
+            {
+                base.GetInfo();
+                Console.WriteLine($"Размах крыльев: {wingspan} м, Тип гнезда: {nestType}");
+            }
+        }
+        public class Reptile : Animal
+        {
+            protected string skinType;
+            protected double ambientTemperature; 
+
+            public Reptile(string species, int age, string habitat, string diet, string name, string skinType, double ambientTemperature) : base(species, age, habitat, diet, name)
+            {
+                this.skinType = skinType;
+                this.ambientTemperature = ambientTemperature;
+            }
+
+            public void Crawl()
+            {
+                Console.WriteLine($"{Name} ползет по среде с температурой {ambientTemperature}°C");
+            }
+
+            public override void GetInfo()
+            {
+                base.GetInfo();
+                Console.WriteLine($"Тип кожи: {skinType}, Температура среды: {ambientTemperature}°C");
+            }
+        }
+        public class Fish : Animal
+        {
+            protected string scaleType;
+            protected double depth; 
+
+            public Fish(string species, int age, string habitat, string diet, string name, string scaleType, double depth) : base(species, age, habitat, diet, name)
+            {
+                this.scaleType = scaleType;
+                this.depth = depth;
+            }
+
+            public void Swim()
+            {
+                Console.WriteLine($"{Name} плавает на глубине {depth} метров.");
+            }
+
+            public override void GetInfo()
+            {
+                base.GetInfo();
+                Console.WriteLine($"Тип чешуи: {scaleType}, Глубина обитания: {depth} м");
+            }
+        }
+            static void Main(string[] args)
+        {
+            
+        }
+    }
+}
