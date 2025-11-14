@@ -1,0 +1,96 @@
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Channels;
+using System.Xml.Linq;
+namespace domashechkaMDK
+{
+    internal class Program
+    {
+        public abstract class LibraryItem
+        {
+            public string Title { get; set; }
+            public string Author { get; set; }
+            public int PublicationYear { get; set; }
+            public bool IsAvailable { get; set; }
+
+            public LibraryItem(string title, string author, int publicationYear)
+            {
+                Title = title;
+                Author = author;
+                PublicationYear = publicationYear;
+                IsAvailable = true; 
+            }
+            public virtual void ShowInfo()
+            {
+                Console.WriteLine($"Название: {Title}, Автор: {Author}, Год: {PublicationYear}, Доступен: {IsAvailable}");
+            }
+        }
+        public class Book : LibraryItem
+        {
+            public int PageCount { get; set; }
+            public string ISBN { get; set; }
+
+            public Book(string title, string author, int publicationYear, int pageCount, string isbn) : base(title, author, publicationYear)
+            {
+                PageCount = pageCount;
+                ISBN = isbn;
+            }
+            public override void ShowInfo()
+            {
+                base.ShowInfo();
+                Console.WriteLine($"Страниц: {PageCount}, ISBN: {ISBN}");
+            }
+        }
+        public class Magazine : LibraryItem
+        {
+            public int IssueNumber { get; set; }
+            public string Periodicity { get; set; }
+
+            public Magazine(string title, string author, int publicationYear, int issueNumber, string periodicity) : base(title, author, publicationYear)
+            {
+                IssueNumber = issueNumber;
+                Periodicity = periodicity;
+            }
+            public override void ShowInfo()
+            {
+                base.ShowInfo();
+                Console.WriteLine($"Выпуск: {IssueNumber}, Периодичность: {Periodicity}");
+            }
+        }
+        public class DVD : LibraryItem
+        {
+            public int Duration { get; set; } 
+            public string Rating { get; set; }
+
+            public DVD(string title, string author, int publicationYear, int duration, string rating) : base(title, author, publicationYear)
+            {
+                Duration = duration;
+                Rating = rating;
+            }
+            public override void ShowInfo()
+            {
+                base.ShowInfo();
+                Console.WriteLine($"Длительность: {Duration} мин, Рейтинг: {Rating}");
+            }
+        }
+        public class Audiobook : LibraryItem
+        {
+            public int Duration { get; set; }
+            public string Narrator { get; set; }
+
+            public Audiobook(string title, string author, int publicationYear, int duration, string narrator) : base(title, author, publicationYear)
+            {
+                Duration = duration;
+                Narrator = narrator;
+            }
+            public override void ShowInfo()
+            {
+                base.ShowInfo();
+                Console.WriteLine($"Длительность: {Duration} мин, Диктор: {Narrator}");
+            }
+        }
+        static void Main(string[] args)
+        {
+            
+        }
+    }
+}
